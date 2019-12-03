@@ -3,7 +3,7 @@
 
 '''
 
-Project 1 - File Operations Project
+Project - Line Counter Project
 
 Parametres configured in settings.txt
 Output contain input file count.
