@@ -3,7 +3,7 @@
 
 '''
 
-Project 1 - File Operations Project
+Project - Line Counter Project
 
 Parametres configured in settings.txt
 Output contain input file count.
@@ -14,55 +14,56 @@ Output contain input file count.
 import sys
 import os
 from datetime import datetime
+from settings import Output_file, Input_file
 
-try:
-    #config file assignment
-	configFile = open("settings.txt")
-	# settings file reading
-	count = 0
-	for i in configFile:
-		if count == 0:
-			inputFileName = i
-		if count == 1:
-			outputFileName = i
+
+time_format = datetime.today().strftime('%Y-%m-%d')
+
+def config_file_parser():
+	input_file_name = Input_file
+	if input_file_name is None:
+		input_file_name = "input.txt"
+	output_file_name = Output_file
+	if output_file_name is None:
+		output_file_name = time_format
+
+	# clear spaces in string
+	input_file_name = input_file_name.strip()
+	output_file_name = output_file_name.strip()
+
+	return input_file_name, output_file_name
+
+
+if __name__ == '__main__':
+
+	input_file_name, output_file_name = config_file_parser()
+
+	try:
+		#input file open and calculate line count
+		input_file = open(input_file_name)
+
+		line_count = 0
+		for i in input_file:
+			line_count = line_count + 1
+
+		input_file.close()
+	except Exception as ex:
+		print("Input File Not Found")
+		# close the program
+		sys.exit(0)
+
+	# check this output file
+	count = 1
+	while True:
+		if os.path.isfile(output_file_name) == True:
+			output_file_name = time_format + "_" + str(count)
+		else:
+			break
 		count = count + 1
-	configFile.close()
-except:
-	inputFileName = "input.txt"
-	outputFileName = datetime.today().strftime('%Y-%m-%d')
 
+	# write line count in output
+	# \n for new line
+	with open(output_file_name, 'w') as f:
+	    f.write(str(line_count) + "\n")
 
-# clear spaces in string
-inputFileName = inputFileName.strip()
-outputFileName = outputFileName.strip()
-
-try:
-	#input file open and calculate line count
-	inputFile = open(inputFileName)
-
-	lineCount = 0
-	for i in inputFile:
-		lineCount = lineCount + 1
-
-	inputFile.close()
-except:
-	print("Input File Not Found")
-	# close the program
-	sys.exit(0)
-
-# check this output file
-count = 1
-while True:
-	if os.path.isfile(outputFileName) == True:
-		outputFileName = datetime.today().strftime('%Y-%m-%d') + "_" + str(count)
-	else:
-		break
-	count = count + 1
-
-# write line count in output
-# \n for new line
-with open(outputFileName, 'w') as f:
-    f.write(str(lineCount) + "\n")
-
-
-
+	sys.stdout.write("Success!\n")
